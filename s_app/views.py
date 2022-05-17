@@ -140,7 +140,12 @@ def main(request):
     ipValue = request.GET.get('ipValue')
     if camera == 'ipcam':
         ip_cam = 'ipcam'
-        source = ipValue
+        source = str(ipValue)
+        ip = source.split(":")[0]
+        port = source.split(":")[1]
+        source = f"https://{ip}:{port}/videofeed?username=&password="
+        print(source)
+        # http: // ip: port / videofeed?username = & password =
     elif camera == 'webcam':
         ip_cam = 'webcam'
         source = 0
