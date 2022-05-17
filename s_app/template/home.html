@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="row mb-5">
+    <div class="col-lg-12 col-md-6 mb-md-0 mb-4">
+        <div class="card">
+
+            <div class="card-header p-3 pt-2">
+                <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                    <i class="material-icons opacity-10">weekend</i>
+
+                </div>
+                <div class="mx-5">
+                    <h3 class="mx-5 pt-1">Welcome to Add User page !</h3>
+                    <p class="mx-5 mb-0">Enter User details</p>
+                </div>
+
+            </div>
+            <div class="card-body">
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+
+
+                        <lable>Upload images</label>
+                            <input type="file" id="files" name="image" multiple class="form-control mb-3" required/>
+
+
+                            <div class="input-group input-group-outline mb-3">
+                                <label class="form-label">Employee ID</label>
+                                <input type="text" class="form-control" name="emp_id" required>
+                            </div>
+                            <div class="input-group input-group-outline mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+
+                            <div class="input-group input-group-outline mb-3">
+                                <label class="form-label">Age</label>
+                                <input type="text" class="form-control" name="age">
+                            </div>
+                            <div class="input-group input-group-outline mb-3">
+                                <label>Gender</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="gender_male" name="gender"
+                                           value="Male" required>
+                                    <label class="form-check-label" for="gender_male">
+                                        Male
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="gender_female" name="gender"
+                                           value="Female" required>
+                                    <label class="form-check-label" for="gender_female">
+                                        Female
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="input-group input-group-outline mb-3">
+                                <label class="form-label">Designation </label>
+                                <input type="text" class="form-control" name="designation" required/>
+                            </div>
+                            <div class="input-group input-group-outline mb-3">
+                                <label class="form-label">Mobile Number</label>
+                                <input type="text" pattern="[0-9]{10}" name="mobile" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline mb-3">
+                                <label>Shift</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="morning" name="shift"
+                                           value="Morning" required>
+                                    <label class="form-check-label" for="morning">
+                                        Morning
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="night" name="shift"
+                                           value="Night" required>
+                                    <label class="form-check-label" for="night">
+                                        Night
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0"
+                                        id="addUser" type="submit">Add New User
+                                </button>
+                            </div>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- start form end  -->
+
+
+<!-- start training data   -->
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-3 pt-2">
+                <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                    <i class="material-icons opacity-10">weekend</i>
+                </div>
+                <div class="mx-5">
+                    <h3 class="mx-5 pt-1">User Data for Training</h3>
+                </div>
+            </div>
+
+            {% if to_train|length == 0 %}
+            <div class="col-12 text-center mt-2">
+                <div class="alert alert-secondary text-white" role="alert">
+                    No new user data for training.
+                </div>
+            </div>
+            {% else %}
+
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                        <tr>
+                            <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7">EmpID</th>
+                            <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7 ps-2">Image</th>
+                            <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7 ps-2">Name</th>
+                            <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Age</th>
+                            <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Gender</th>
+                            <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Mobile</th>
+                            <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Designation</th>
+                            <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Shift</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for tt in to_train %}
+                        {% if tt.model.name %}
+                        <tr>
+                            <td>
+                                <p class="text-xs font-weight-bold mb-0 mx-4">{{ tt.model.emp_id }}</p>
+                            </td>
+                            <td>
+                                <div>
+                                    <img src="{{ tt.image.url }}" class="avatar avatar-sm me-3 border-radius-lg"
+                                         alt="user_image">
+                                </div>
+                            </td>
+
+                            <td class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm">{{ tt.model.name }}</h6>
+                            </td>
+
+                            <td>
+                                <p class="text-xs font-weight-bold mb-0 mx-3">{{ tt.model.age }}</p>
+                            </td>
+                            <td class="align-middle text-sm">
+                                <p class="text-xs font-weight-bold mb-0 mx-3">{{ tt.model.gender }}</p>
+                            </td>
+                            <td class="align-middle">
+                                  <span class="text-dark text-xs font-weight-bold mx-1">
+                                    {{ tt.model.mobile }}
+                                  </span>
+                            </td>
+                            <td class="align-middle">
+                                  <span class="text-dark text-xs font-weight-bold mx-3">
+                                    {{ tt.model.designation }}
+                                  </span>
+                            </td>
+                            <td class="align-middle">
+                                {% if tt.model.shift == 'Night' %}
+                                <p class="text-ssm font-weight-bold mb-0 badge badge-sm bg-gradient-dark mx-2">{{ tt.model.shift }}</p>
+                                {% else %}
+                                <p class="text-ssm font-weight-bold mb-0 badge badge-sm bg-gradient-light mx-2">{{ tt.model.shift }}</p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="{% url 'train' %}"><button class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0" onclick="showProgress()">
+                    Start Training
+                </button></a>
+            </div>
+
+
+
+<!--            <div id="progress" class=" p-3 pb-0 pt-3">-->
+            <div id="progress" style="display: None" class=" p-3 pb-0 pt-3">
+
+                <div class="progress-wrapper mx-auto pb-3">
+                    <span class="text-uppercase text-dark text-sm font-weight-bolder">Training is in progress...</span>
+<!--                    <div class="progress-info">-->
+<!--                        <div class="progress-percentage">-->
+<!--                            <span class="text-xs font-weight-bold">100%</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div class="progress">
+<!--                        <div class="progress-bar bg-gradient-success w-100" role="progressbar"></div>-->
+<!--                        <br>-->
+                        <progress class="w-100" id="loader" max="100"></progress>
+                    </div>
+                </div>
+
+
+
+                <div class="alert alert-warning alert-dismissible text-white" role="alert">
+                    <span class="text-sm">Please don't click anywhere  <span class="alert-link text-white">or refresh this window</span>.</span>
+                </div>
+            </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+<!-- training end  -->
+
+
+{% endblock content %}

@@ -1,0 +1,27 @@
+<nav>
+    {% if user.is_authenticated %}
+    {% if user.is_staff or user.is_superuser %}
+    <a href="{% url 'home' %}">Add Employee</a>
+    <br>
+    <a href="{% url 'att_records' %}">Employee Attendance Records</a>
+    <br>
+    <a href="{% url 'unidentified_faces_records' %}">Unidentified People Records</a>
+    <br>
+    <a href="{% url 'user_records' %}">Employee Records</a>
+    <br>
+    <a href="{% url 'main' %}">Main Window</a>
+    <br>
+    <a href="{% url 'logout' %}">Logout</a>
+    {% endif %}
+    {% endif %}
+</nav>
+<main>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+</main>

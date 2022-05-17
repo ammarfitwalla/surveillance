@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Welcome to Add User page {{ user.username }}!</h1>
+
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        <label>Upload Photos</label>
+        <input type="file" name="image" accept="image/*" multiple required/>
+    </div>
+
+    <div>
+        <label>Employee ID</label>
+        <input type="text" name="emp_id" required/>
+    </div>
+
+    <div>
+        <label>Name</label>
+        <input type="text" name="name" required/>
+    </div>
+
+    <div>
+        <label>Age</label>
+        <input type="number" name="age" required/>
+    </div>
+
+    <div>
+        <label>Gender</label>
+        <input type="radio" id="gender_male" name="gender" value="Male" required>
+        <label for="gender_male">Male</label><br>
+        <input type="radio" id="gender_female" name="gender" value="Female" required>
+        <label for="gender_female">Female</label><br>
+    </div>
+
+    <div>
+        <label>Designation</label>
+        <input type="text" name="designation" required/>
+    </div>
+
+    <div>
+        <label>Mobile Number</label>
+        <input type="text" name="mobile"/><br>
+    </div>
+
+    <div>
+        <label>Shift</label>
+        <input type="radio" id="morning" name="shift" value="Morning" required>
+        <label for="morning">Morning</label><br>
+        <input type="radio" id="night" name="shift" value="Night" required>
+        <label for="night">Night</label><br>
+    </div>
+
+    <div>
+        <input id="addUser" type="submit"/>
+    </div>
+</form>
+
+{% if to_train|length == 0 %}
+<h3>No new user data for training.</h3>
+{% else %}
+<div>
+    <table>
+        <tr>
+            <td colspan="8" style="font-size: 25px;"><b>User Data for Training</b></td>
+        </tr>
+        <tr>
+            <th>EmpID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Mobile</th>
+            <th>Designation</th>
+            <th>Shift</th>
+        </tr>
+        {% for tt in to_train %}
+        {% if tt.model.name %}
+        <tr>
+            <td>{{ tt.model.emp_id }}</td>
+            <td><img style="height: 50px; width: 40px;" src="{{ tt.image.url }}" alt=user_image"></td>
+            <td>{{ tt.model.name }}</td>
+            <td>{{ tt.model.age }}</td>
+            <td>{{ tt.model.gender }}</td>
+            <td>{{ tt.model.mobile }}</td>
+            <td>{{ tt.model.designation }}</td>
+            <td>{{ tt.model.shift }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+
+    </table>
+
+    <br>
+    <div id="trainButton">
+        <button onclick="showProgress()"><a href="{% url 'train' %}">Start Training</a></button>
+    </div>
+</div>
+<div id="progress" style="display: None">
+    <label for="loader">Training is in progress:</label>
+    <progress id="loader" max="100"></progress>
+    <h4>Please do not click anywhere or refresh this window.</h4>
+</div>
+
+{% endif %}
+
+<script>
+    function showProgress() {
+        document.getElementById('progress').style.display = 'block';
+        document.getElementById('trainButton').style.display = 'none';
+        document.getElementById('addUser').disabled = true;
+    }
+
+</script>
+
+
+{% endblock content %}

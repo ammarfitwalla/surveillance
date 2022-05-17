@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-6">
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Unidentified People Records</h6>
+                    </div>
+                </div>
+
+                {% if all_records|length == 0 %}
+                <div class="col-12 text-center mt-2">
+                    <div class="alert alert-secondary text-white" role="alert">
+                        No Unidentified People Records!
+                    </div>
+                </div>
+                {% else %}
+
+                <div class="card-body px-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center justify-content-center mb-0">
+                            <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder text-center opacity-7">
+                                    Image
+                                </th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">
+                                    Entered Time
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for record in all_records %}
+                            <tr>
+                                <td>
+                                    <div class="text-center">
+                                        <div class="userrecords">
+                                            <img src="../../media/unidentified/{{record.image}}"
+                                                 class="avatar avatar-xl position-relative border-radius-lg"
+                                                 alt="No_img">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="text-lg font-weight-bold mb-0 badge badge-sm bg-gradient-success">
+                                        {{record.enter}}</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}

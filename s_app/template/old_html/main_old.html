@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<head>
+    <title>Video Live Stream</title>
+    <style>
+table, th, td {
+  border: 1px solid black;
+}
+
+
+    </style>
+</head>
+
+<h1>Video Live Stream</h1>
+
+<br>
+<button type="button" onclick="showCameraSelect()">Select / Change video source</button>
+<br>
+
+{% if ip_cam == 'ipcam' %}
+<h3>IPcam Selected</h3>
+<img src="{% url 'video_feed' %}">
+{% elif ip_cam == 'webcam' %}
+<h3>Webcam Selected</h3>
+<img src="{% url 'video_feed' %}">
+{% else %}
+<h3>No Source for video selected, please select a source to continue.</h3>
+{% endif %}
+
+
+
+<form method="GET" id="camera_form" style="display: None">
+    {% csrf_token %}
+    <p>You can select the source for video here:</p>
+
+    <input type="radio" id="webcam" onchange="checkCamera()" name="camera" value="webcam" required>
+    <label for="webcam">Webcam</label><br>
+    <input type="radio" id="ipcam" onchange="checkCamera()" name="camera" value="ipcam" required>
+    <label for="ipcam">IP-CAM</label>
+    <br>
+
+    <div id="showIP" style="display: None">Please enter the IP of camera here:
+        <input type='text' id='ipValue' name='ipValue'/>
+    </div>
+    <input type="submit"/>
+</form>
+
+
+{% if att_today|length == 0 %}
+<h2>No Attendance Records Today!</h2>
+{% else %}
+<div>
+    <table>
+        <tr>
+            <td colspan="7" style="font-size: 25px;"><b>Today's Attendance Record</b></td>
+        </tr>
+        <tr>
+            <th>EmpID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Designation</th>
+            <th>Shift</th>
+            <th>Enter</th>
+            <th>Exit</th>
+        </tr>
+        {% for att in att_today %}
+        <tr>
+            <td>{{ att.emp_id }}</td>
+            <td><img width="100" height="100" src="../../media/employees/{{att.emp_id}}_{{att.name}}/{{att.image}}" alt=user_image"></td>
+            <td>{{ att.name }}</td>
+            <td>{{ att.designation }}</td>
+            <td>{{ att.shift }}</td>
+            <td>{{ att.enter }}</td>
+            <td>{{ att.exit }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+{% endif %}
+
+
+<script>
+    function checkCamera() {
+        if (document.getElementById('webcam').checked) {
+            document.getElementById('showIP').style.display = 'none';
+        } else {
+            document.getElementById('showIP').style.display = 'block';
+        }
+    }
+
+    function showCameraSelect() {
+        if (document.getElementById('camera_form').style.display = 'none') {
+            document.getElementById('camera_form').style.display = 'block';
+        } else {
+            document.getElementById('camera_form').style.display = 'none';
+        }
+    }
+
+
+
+</script>
+
+
+{% endblock content %}

@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12 mt-4">
+            <div class="card px-4 pb-4">
+
+                <div class="card-header p-3 pt-2">
+                    <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">weekend</i>
+                    </div>
+                    <div class="mx-5">
+                        <h3 class="mx-5 pt-1">Live Video Stream</h3>
+                    </div>
+                    <div class="text-end pt-1">
+                    </div>
+                </div>
+                <hr class="dark horizontal mx-5">
+
+                <div class="card-body pt-4 p-3 pb-3">
+
+
+                    <a class="btn bg-gradient-dark mb-4 " onclick="showCameraSelect()"><i
+                            class="material-icons text-sm">add</i>&nbsp;&nbsp; Select / Change video source</a>
+                    <form method="GET" id="camera_form" style="display: None">
+                        {% csrf_token %}
+                        <h6 class="mb-2">You can select the source for video here:</h6>
+
+                        <div class="form-check is-filled mb-3">
+                            <input class="form-check-input" type="radio" id="webcam" onchange="checkCamera()"
+                                   name="camera" value="webcam" required>
+                            <label class="form-check-label" for="webcam">Webcam</label><br>
+                            <input class="form-check-input" type="radio" id="ipcam" onchange="checkCamera()"
+                                   name="camera" value="ipcam" required>
+                            <label class="form-check-label" for="ipcam">IP-CAM</label>
+                        </div>
+
+
+                        <div class="input-group input-group-outline mb-3" id="showIP" style="display: None">
+                            <h6>Please enter the IP of camera here</h6>
+                            <div>
+                                <input type="text" class="form-control" placeholder="IP Address" id='ipValue'
+                                       name='ipValue'/>
+                            </div>
+                        </div>
+                        <input class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0" type="submit"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row py-4 mb-5">
+            <div class="col-md-12 mt-4">
+                <div class="card h-100 mb-4">
+
+
+                    {% if ip_cam == 'ipcam' %}
+                    <div class="card-header pb-0 px-3">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 class="mb-0">Live Stream Camera - IPcam Selected</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body pt-4 p-3 live-stream">
+                            <img src="{% url 'video_feed' %}">
+                    </div>
+
+
+                    {% elif ip_cam == 'webcam' %}
+                    <div class="card-header pb-0 px-3">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 class="mb-0">Live Stream Camera - Webcam Selected</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body pt-4 p-3 live-stream w-auto">
+                            <img src="{% url 'video_feed' %}">
+                    </div>
+
+                    {% else %}
+                    <div class="card-header pb-0 px-3">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 class="mb-0">Live Stream Camera - No Source for video selected, please select a source to continue.</h6>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- start training data   -->
+
+
+<!--    <div class="row mt-5">-->
+<!--        <div class="col-12">-->
+<!--            <div class="card my-4">-->
+<!--                <div class="card-header p-3 pt-2">-->
+<!--                    <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">-->
+<!--                        <i class="material-icons opacity-10">weekend</i>-->
+<!--                    </div>-->
+<!--                    <div class="mx-5">-->
+<!--                        <h3 class="mx-5 pt-1">Today's Attendance Record</h3>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                {% if att_today|length == 0 %}-->
+<!--                <div class="col-12 text-center">-->
+<!--                    <div class="alert alert-secondary text-white" role="alert">-->
+<!--                        No Attendance Marked Today!-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                {% else %}-->
+
+<!--                <div class="card-body px-0 pb-2">-->
+<!--                    <div class="table-responsive p-0">-->
+<!--                        <table class="table align-items-center mb-4">-->
+<!--                            <thead>-->
+<!--                            <tr>-->
+<!--                                <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7">EmpID</th>-->
+<!--                                <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7 ps-2">Image-->
+<!--                                </th>-->
+<!--                                <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7 ps-2">Name-->
+<!--                                </th>-->
+
+<!--                                <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">-->
+<!--                                    Designation-->
+<!--                                </th>-->
+<!--                                <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Shift</th>-->
+<!--                                <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Enter</th>-->
+<!--                                <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Exit</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+
+<!--                            {% for att in att_today %}-->
+<!--                            <tr>-->
+<!--                                <td>-->
+<!--                                    <p class="text-xs font-weight-bold mb-0 mx-4">{{ att.emp_id }}</p>-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    <div>-->
+<!--                                        <img src="{{ att.image.url }}"-->
+<!--                                             class="avatar avatar-sm me-3 border-radius-lg" alt="user_image">-->
+<!--                                    </div>-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    <div class="d-flex flex-column justify-content-center">-->
+<!--                                        <h6 class="mb-0 text-sm">{{ att.name }}</h6>-->
+<!--                                    </div>-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    <p class="text-xs font-weight-bold mb-0 mx-3">{{ att.designation }}</p>-->
+<!--                                </td>-->
+<!--                                <td class="align-middle text-sm">-->
+<!--                                    <p class="text-xs font-weight-bold mb-0 mx-3">{{ att.shift }}</p>-->
+<!--                                </td>-->
+<!--                                <td class="align-middle">-->
+<!--                                    <p class="text-ssm font-weight-bold mb-0 badge badge-sm bg-gradient-success mx-2">{{ att.enter }}</p>-->
+<!--                                </td>-->
+<!--                                <td class="align-middle">-->
+<!--                                    <p class="text-ssm font-weight-bold mb-0 badge badge-sm bg-gradient-danger mx-2">{{ att.exit }}</p>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                            {% endfor %}-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                {% endif %}-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+{% endblock content %}

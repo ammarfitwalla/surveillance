@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<head>
+    <title>Unidentified Records</title>
+</head>
+<center>
+    <h1>Unidentified People Records</h1>
+</center>
+
+{% if all_records|length == 0 %}
+<h2>No Unidentified People Records!</h2>
+{% else %}
+<table border="1">
+    <tr>
+        <th>Image</th>
+        <th>Entered Time</th>
+    </tr>
+
+    {% for record in all_records %}
+    <tr>
+        <td><img src="../../media/unidentified/{{record.image}}" alt="" height=100 width=100></td>
+        <td>{{record.enter}}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+{% if url_name == 'att_records' %}
+
+<!-- start Today attendance record data   -->
+
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card my-4">
+            <div class="card-header p-3 pt-2">
+                <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                    <i class="material-icons opacity-10">weekend</i>
+                </div>
+                <div class="mx-5">
+                    <h3 class="mx-5 pt-1">Today's Attendance Records</h3>
+                </div>
+            </div>
+
+<!--<div class="row mt-5">-->
+<!--    <div class="col-12">-->
+<!--        <div class="card my-4">-->
+<!--            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">-->
+<!--                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">-->
+<!--                    <h6 class="text-white text-capitalize ps-3">Today's Attendance Records</h6>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            {% if att_today|length == 0 %}
+            <div class="col-12 text-center">
+                <div class="alert alert-secondary text-white" role="alert">
+                    No Attendance Marked Today!
+                </div>
+            </div>
+            {% else %}
+
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-4">
+                        <thead>
+                        <tr>
+                            <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7">EmpID</th>
+                            <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7 ps-2">Image
+                            </th>
+                            <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7 ps-2">Name
+                            </th>
+
+                            <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">
+                                Designation
+                            </th>
+                            <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Shift</th>
+                            <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Enter</th>
+                            <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Exit</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for att in att_today %}
+                        <tr>
+                            <td>
+                                <p class="text-xs font-weight-bold mb-0 mx-4">{{ att.emp_id }}</p>
+                            </td>
+                            <td>
+                                <div>
+                                    {{ att.image.url }}
+                                    <img src="../../media/employees/{{att.emp_id}}_{{att.name}}/{{att.image}}"
+                                         class="avatar avatar-sm me-3 border-radius-lg" alt="user_image">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex flex-column justify-content-center">
+                                    <h6 class="mb-0 text-sm">{{ att.name }}</h6>
+                                </div>
+                            </td>
+                            <td>
+                                <p class="text-xs font-weight-bold mb-0 mx-3">{{ att.designation }}</p>
+                            </td>
+                            <td class="align-middle text-sm">
+                                <p class="text-xs font-weight-bold mb-0 mx-3">{{ att.shift }}</p>
+                            </td>
+                            <td class="align-middle">
+                                <p class="text-ssm font-weight-bold mb-0 badge badge-sm bg-gradient-success mx-2">{{ att.enter }}</p>
+                            </td>
+                            <td class="align-middle">
+                                <p class="text-ssm font-weight-bold mb-0 badge badge-sm bg-gradient-danger mx-2">{{ att.exit }}</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- start attendance record data   -->
+
+<!--    <div class="row mt-5">-->
+<!--        <div class="col-12">-->
+<!--            <div class="card my-4">-->
+<!--                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">-->
+<!--                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">-->
+<!--                        <h6 class="text-white text-capitalize ps-3">Attendance Record History</h6>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-header p-3 pt-2">
+                    <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">weekend</i>
+                    </div>
+                    <div class="mx-5">
+                        <h3 class="mx-5 pt-1">Attendance Record History</h3>
+                    </div>
+                </div>
+
+                {% if all_attend|length == 0 %}
+                <div class="col-12 text-center mt-2">
+                    <div class="alert alert-secondary text-white" role="alert">
+                        No Attendance records found.
+                    </div>
+                </div>
+                {% else %}
+
+                <div class="card-body px-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-4">
+                            <thead>
+                            <tr>
+                                <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7">EmpID</th>
+                                <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7 ps-2">Image
+                                </th>
+                                <th class="text-uppercase text-dark text-xxs font-weight-bolder opacity-7 ps-2">Name
+                                </th>
+                                <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">
+                                    Designation
+                                </th>
+                                <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Shift</th>
+                                <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Enter</th>
+                                <th class=" text-uppercase text-dark text-xxs font-weight-bolder opacity-7">Exit</th>
+                                <th class="text-dark opacity-7"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for attend in all_attend %}
+                            <tr>
+                                <td>
+                                    <p class="text-xs font-weight-bold mb-0 mx-4">{{ attend.emp_id }}</p>
+                                </td>
+                                <td>
+                                    <div>
+                                        <img src="../../media/employees/{{attend.emp_id }}_{{attend.name}}/{{attend.image}}"
+                                             class="avatar avatar-sm me-3 border-radius-lg" alt="user_image">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="mb-0 text-sm">{{ attend.name }}</h6>
+                                    </div>
+                                </td>
+
+                                <td class="align-middle">
+                                    <span class="text-dark text-xs font-weight-bold mx-3">
+                                      {{ attend.designation }}
+                                    </span>
+                                </td>
+                                <td class="align-middle">
+                                    <span class="text-dark text-xs font-weight-bold mx-3">
+                                       {{ attend.shift }}
+                                    </span>
+                                </td>
+                                <td class="align-middle">
+                                    <p class="text-ssm font-weight-bold mb-0 badge badge-sm bg-gradient-success mx-2">{{ attend.enter }}</p>
+                                </td>
+                                <td class="align-middle">
+                                    <p class="text-ssm font-weight-bold mb-0 badge badge-sm bg-gradient-danger mx-2">{{ attend.exit }}</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+
+{% elif url_name == 'user_records' %}
+
+<div class="container-fluid py-4 userrecords">
+    <div class="row">
+        <div class="col-md-12 mt-4">
+            <div class="card z-index-2">
+
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+
+                        <h3 class="mb-0 headings">Employee Records</h3>
+
+                    </div>
+                </div>
+
+                {% if emp_records|length == 0 %}
+                <div class="col-12 text-center mt-2">
+                    <div class="alert alert-secondary text-white" role="alert">
+                        No Employee records found.
+                    </div>
+                </div>
+                {% else %}
+
+                <div class="card-body pt-4 p-3">
+                    <ul class="list-group">
+
+                        {% for emp in emp_records %}
+
+                        <li class="list-group-item border-0 d-md-flex d-lg-flex d-xl-flex p-4 mb-2 mt-3 bg-gray-100 border-radius-lg">
+                            <div class="col-auto">
+                                <div class="avatar avatar-xl position-relative">
+                                    <img src="{{ emp.image.url }}" alt="profile_image"
+                                         class="w-100 h-100 border-radius-lg shadow-sm">
+
+                                </div>
+                            </div>
+
+                            <div class=" d-flex flex-column mx-5">
+                                <h4 class="mb-3 ">{{ emp.model.name }}</h4>
+                                <span class="mb-2 text-xs">Employee ID : <span
+                                        class="text-dark font-weight-bold ms-sm-2">{{ emp.model.emp_id }}</span></span>
+                                <span class="mb-2 text-xs">Age : <span class="text-dark ms-sm-2 font-weight-bold">{{ emp.model.age }}</span></span>
+                                <span class="text-xs">Gender: <span
+                                        class="text-dark ms-sm-2 font-weight-bold">{{ emp.model.gender }}</span></span>
+                            </div>
+
+                            <div class="d-md-flex d-lg-flex flex-column mx-5">
+                                <h3 class="mb-5 pb-2 "></h3>
+                                <span class="mb-2 text-xs">Designation: <span
+                                        class="text-dark font-weight-bold ms-sm-2">{{ emp.model.designation }}</span></span>
+                                <span class="mb-2 text-xs">Mobile Number : <span
+                                        class="text-dark ms-sm-2 font-weight-bold">{{ emp.model.mobile }}</span></span>
+                                <span class="text-xs">Shift: <span class="text-dark ms-sm-2 font-weight-bold">{{ emp.model.shift }}</span></span>
+
+                            </div>
+<!--                            <div class="ms-auto text-end mt-5">-->
+<!--                                <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;"><i-->
+<!--                                        class="material-icons text-sm me-2">delete</i>Delete</a>-->
+<!--                                <a class="btn btn-link text-dark px-3 mb-0" href="javascript:;"><i-->
+<!--                                        class="material-icons text-sm me-2">edit</i>Edit</a>-->
+<!--                            </div>-->
+                        </li>
+
+                        {% endfor %}
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endif %}
+{% endif %}
+
+{% endblock content %}

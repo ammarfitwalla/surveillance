@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<head>
+    <style>
+table, th, td {
+  border: 1px solid black;
+}
+    </style>
+</head>
+{% if url_name == 'att_records' %}
+{% if all_attend|length == 0 %}
+<h2>No Attendance records found</h2>
+{% else %}
+<div>
+    <table>
+        <tr>
+            <td colspan="7" style="font-size: 25px;"><b>Attendance Records</b></td>
+        </tr>
+        <tr>
+            <th>EmpID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Designation</th>
+            <th>Shift</th>
+            <th>Enter</th>
+            <th>Exit</th>
+        </tr>
+        {% for attend in all_attend %}
+        <tr>
+            <td>{{ attend.emp_id }}</td>
+<!--            <td>{{ attend.image.url }}</td>-->
+            <td><img height="100" width="100" src="../../media/employees/{{attend.emp_id}}_{{attend.name}}/{{attend.image}}" alt=user_image"></td>
+            <td>{{ attend.name }}</td>
+            <td>{{ attend.designation }}</td>
+            <td>{{ attend.shift }}</td>
+            <td>{{ attend.enter }}</td>
+            <td>{{ attend.exit }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+{% endif %}
+{% elif url_name == 'user_records' %}
+{% if emp_records|length == 0 %}
+<h2>No Employee records found</h2>
+{% else %}
+<div>
+    <table>
+        <tr>
+            <td colspan="8" style="font-size: 25px;"><b>Users Records</b></td>
+        </tr>
+        <tr>
+            <th>EmpID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Mobile</th>
+            <th>Designation</th>
+            <th>Shift</th>
+        </tr>
+        {% for emp in emp_records %}
+        <tr>
+            <td>{{ emp.model.emp_id }}</td>
+            <td><img src="{{ emp.image.url }}" alt=user_image"></td>
+            <td>{{ emp.model.name }}</td>
+            <td>{{ emp.model.age }}</td>
+            <td>{{ emp.model.gender }}</td>
+            <td>{{ emp.model.mobile }}</td>
+            <td>{{ emp.model.designation }}</td>
+            <td>{{ emp.model.shift }}</td>
+        </tr>
+        {% endfor %}
+
+
+    </table>
+</div>
+{% endif %}
+{% endif %}
+{% endblock content %}
+
