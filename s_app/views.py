@@ -153,6 +153,7 @@ def main(request):
         ip_cam = 'webcam'
         source = 0
 
+    print(source)
     context = {
         'ip_cam': ip_cam,
     }
