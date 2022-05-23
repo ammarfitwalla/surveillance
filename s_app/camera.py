@@ -40,7 +40,7 @@ def encodings_for_training(data_list: list):
     print(len(faces_encodings))
     print("---------------------------")
     # use pickle to save data into a file for later use
-    f = open(os.path.join(MEDIA_ROOT, "face_enc"), "wb")
+    f = open(os.path.join(MEDIA_ROOT, 'model', "face_enc"), "wb")
     f.write(pickle.dumps(data))  # to open file in write mode
     f.close()  # to close file
 
@@ -117,7 +117,7 @@ def mark_unidentified_face(folder_name, frame):
 class VideoCamera(object):
     def __init__(self, source):
         self.video = cv2.VideoCapture(source)
-        self.data = pickle.loads(open(os.path.join(MEDIA_ROOT, "face_enc"), "rb").read())
+        self.data = pickle.loads(open(os.path.join(MEDIA_ROOT, 'model', "face_enc"), "rb").read())
         self.decider = list()
         self.marker = False
         self.text = None

@@ -1,3 +1,5 @@
+import os.path
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -141,14 +143,14 @@ def main(request):
     if camera == 'ipcam':
         ip_cam = 'ipcam'
         source = str(ipValue)
-		if ":" in source:
-			ip = source.split(":")[0]
-			port = source.split(":")[1]
-			source = f"https://{ip}:{port}/videofeed?username=&password="
-			# http: // ip: port / videofeed?username = & password =
-		else:
-			source = int(source)
-        
+        if ":" in source:
+            ip = source.split(":")[0]
+            port = source.split(":")[1]
+            source = f"https://{ip}:{port}/videofeed?username=&password="
+            # http: // ip: port / videofeed?username = & password =
+        else:
+            source = int(source)
+
     elif camera == 'webcam':
         ip_cam = 'webcam'
         source = 0
@@ -176,8 +178,12 @@ def train(request):
                 # frame = cv2.imread(os.path.join(MEDIA_ROOT, str(j.image)))
                 data.append([i.emp_id + "_" + i.name, os.path.join(MEDIA_ROOT, str(j.image))])
 
-        if os.path.isfile(os.path.join(MEDIA_ROOT, 'face_enc')):
-            os.remove(os.path.join(MEDIA_ROOT, 'face_enc'))
+        create_dir(os.path.join(MEDIA_ROOT, 'model'))
+        create_dir(os.path.join(MEDIA_ROOT, 'employees'))
+        create_dir(os.path.join(MEDIA_ROOT, 'unidentified'))
+
+        if os.path.isfile(os.path.join(MEDIA_ROOT, 'model', 'face_enc')):
+            os.remove(os.path.join(MEDIA_ROOT, 'model', 'face_enc'))
 
         encodings_for_training(data)
 
@@ -209,3 +215,8 @@ def video_feed(request):
     global source
     return StreamingHttpResponse(gen(VideoCamera(source)),
                                  content_type='multipart/x-mixed-replace; boundary=frame')
+
+
+def create_dir(path):
+    if not os.path.isdir(path):
+        os.mkdir(path)
