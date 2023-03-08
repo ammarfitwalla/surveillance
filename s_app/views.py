@@ -144,10 +144,11 @@ def main(request):
         ip_cam = 'ipcam'
         source = str(ipValue)
         if ":" in source:
-            ip = source.split(":")[0]
-            port = source.split(":")[1]
-            source = f"https://{ip}:{port}/videofeed?username=&password="
-            # http: // ip: port / videofeed?username = & password =
+            if "https" in source:
+                ip = source.split(":")[0]
+                port = source.split(":")[1]
+                source = f"https://{ip}:{port}/videofeed?username=&password="
+                # http: // ip: port / videofeed?username = & password =
         else:
             source = int(source)
 
@@ -155,7 +156,7 @@ def main(request):
         ip_cam = 'webcam'
         source = 0
 
-    print(source)
+    print('source ===', source)
     context = {
         'ip_cam': ip_cam,
     }
