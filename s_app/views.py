@@ -6,11 +6,14 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from .forms import UserRegisterForm
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse, HttpResponse
 from .camera import *
 from datetime import date
 from s_project.settings import MEDIA_ROOT
 from django.views.decorators.cache import cache_control
+
+# File Uploader
+from django.core.files.storage import FileSystemStorage
 
 to_train = list()
 source = None
@@ -138,8 +141,15 @@ def records(request):
 def main(request):
     global source
     ip_cam = None
-    camera = request.GET.get('camera')
-    ipValue = request.GET.get('ipValue')
+    camera = request.POST.get('camera')
+    ipValue = request.POST.get('ipValue')
+    videoValue = request.FILES.get('video')
+    print("CAMERA", source, camera, videoValue)
+    print(request.POST)
+    print("+==========================================================")
+    print(request.GET)
+    print("+==========================================================")
+    print(request.FILES)
     if camera == 'ipcam':
         ip_cam = 'ipcam'
         source = str(ipValue)
@@ -155,6 +165,13 @@ def main(request):
     elif camera == 'webcam':
         ip_cam = 'webcam'
         source = 0
+    
+    elif camera == 'video':
+        ip_cam = 'video'
+        fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'videos'))
+        filename = fs.save(videoValue.name, videoValue)
+        source = fs.path(filename)
+        print("VIDEO", filename, type(filename))
 
     print('source ===', source)
     context = {
@@ -214,8 +231,27 @@ def gen(camera):
 
 def video_feed(request):
     global source
-    return StreamingHttpResponse(gen(VideoCamera(source)),
-                                 content_type='multipart/x-mixed-replace; boundary=frame')
+    print("[INFO] Video Source", source)
+    
+    try:
+        # Initialize the video generator
+        video_generator = gen(VideoCamera(source))
+        
+        # Attempt to retrieve the first frame
+        first_frame = next(video_generator, None)
+        
+        if first_frame is None:
+            # If no frames are available, return an empty response or a message
+            print("[INFO] No frames available in the video source.")
+            return HttpResponse("No video frames available", content_type="text/plain", status=204)
+        
+        # If there are frames, return the StreamingHttpResponse
+        return StreamingHttpResponse(video_generator, content_type='multipart/x-mixed-replace; boundary=frame')
+    
+    except Exception as e:
+        # Handle any exceptions that might occur
+        print(f"[ERROR] An error occurred: {e}")
+        return HttpResponse("An error occurred while processing the video stream.", status=500)
 
 
 def create_dir(path):
