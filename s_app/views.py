@@ -1,16 +1,15 @@
 import os.path
-
-from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.core.files.storage import FileSystemStorage
-from django.shortcuts import render, redirect
-from .forms import UserRegisterForm
-from django.http import StreamingHttpResponse
 from .camera import *
 from datetime import date
+from django.conf import settings
+from .forms import UserRegisterForm
+from django.contrib import messages
 from s_project.settings import MEDIA_ROOT
+from django.http import StreamingHttpResponse
+from django.shortcuts import render, redirect
+from django.core.files.storage import FileSystemStorage
 from django.views.decorators.cache import cache_control
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 to_train = list()
 source = None
@@ -60,7 +59,6 @@ def home(request):
         mobile = request.POST.get('mobile')
         designation = request.POST.get('designation')
         shift = request.POST.get('shift')
-
         image = request.FILES.getlist('image')
         filesystem = FileSystemStorage()
         all_good = False
@@ -76,8 +74,7 @@ def home(request):
                 all_good = True
 
         if all_good:
-            insert_employee = Employee(emp_id=emp_id, name=name, age=age, gender=gender, mobile=mobile,
-                                       designation=designation, shift=shift)
+            insert_employee = Employee(emp_id=emp_id, name=name, age=age, gender=gender, mobile=mobile, designation=designation, shift=shift)
             insert_employee.save()
             get_employee_id = Employee.objects.last()
 
@@ -85,6 +82,9 @@ def home(request):
                 EmployeeImage.objects.create(model=get_employee_id, image=img)
         else:
             messages.error(request, f'Please upload proper image with one visible face.')
+            print(emp_id, name, age, gender, designation, shift)
+            context = {'to_train': to_train, 'emp_id': emp_id, 'name': name, 'age': age, 'gender': gender, 'designation': designation, 'shift': shift, 'mobile':mobile}
+            return render(request, 'home.html', context)
 
     train_emp = EmployeeImage.objects.all()
 
@@ -95,9 +95,7 @@ def home(request):
 
     print('to_train', to_train)
 
-    context = {
-        'to_train': to_train,
-    }
+    context = {'to_train': to_train, }
 
     return render(request, 'home.html', context)
 
@@ -124,12 +122,7 @@ def records(request):
         if today == str(attend.enter).split()[0]:
             att_today.append(attend)
 
-    context = {
-        'all_attend': all_attend,
-        'emp_records': emp_records,
-        'url_name': url_name,
-        'att_today': att_today
-    }
+    context = {'all_attend': all_attend, 'emp_records': emp_records, 'url_name': url_name, 'att_today': att_today}
     return render(request, 'records.html', context)
 
 
@@ -147,8 +140,7 @@ def main(request):
             if "https" in source:
                 ip = source.split(":")[0]
                 port = source.split(":")[1]
-                source = f"https://{ip}:{port}/videofeed?username=&password="
-                # http: // ip: port / videofeed?username = & password =
+                source = f"https://{ip}:{port}/videofeed?username=&password="  # http: // ip: port / videofeed?username = & password =
         else:
             source = int(source)
 
@@ -157,9 +149,7 @@ def main(request):
         source = 0
 
     print('source ===', source)
-    context = {
-        'ip_cam': ip_cam,
-    }
+    context = {'ip_cam': ip_cam, }
     return render(request, 'main.html', context)
 
 
@@ -214,8 +204,7 @@ def gen(camera):
 
 def video_feed(request):
     global source
-    return StreamingHttpResponse(gen(VideoCamera(source)),
-                                 content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(gen(VideoCamera(source)), content_type='multipart/x-mixed-replace; boundary=frame')
 
 
 def create_dir(path):

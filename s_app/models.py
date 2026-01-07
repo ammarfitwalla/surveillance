@@ -26,12 +26,19 @@ class EmployeeImage(models.Model):
     def save(self, *args, **kwargs):
         super(EmployeeImage, self).save(*args, **kwargs)
 
-        img = Image.open(self.image.path)
+        # Only resize if the image file exists
+        if self.image and hasattr(self.image, 'path'):
+            try:
+                img = Image.open(self.image.path)
 
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
+                if img.height > 300 or img.width > 300:
+                    output_size = (300, 300)
+                    img.thumbnail(output_size)
+                    img.save(self.image.path)
+            except Exception as e:
+                print(f"Error resizing image: {e}")
+                # Don't fail the save if resize fails
+                pass
 
     def __str__(self):
         return str(self.model.emp_id) + '_' + str(self.model.name)
