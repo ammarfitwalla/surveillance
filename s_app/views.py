@@ -131,8 +131,15 @@ def records(request):
 def main(request):
     global source
     ip_cam = None
-    camera = request.GET.get('camera')
-    ipValue = request.GET.get('ipValue')
+    camera = request.POST.get('camera')
+    ipValue = request.POST.get('ipValue')
+    videoValue = request.FILES.get('video')
+    print("CAMERA", source, camera, videoValue)
+    print(request.POST)
+    print("+==========================================================")
+    print(request.GET)
+    print("+==========================================================")
+    print(request.FILES)
     if camera == 'ipcam':
         ip_cam = 'ipcam'
         source = str(ipValue)
@@ -147,6 +154,13 @@ def main(request):
     elif camera == 'webcam':
         ip_cam = 'webcam'
         source = 0
+    
+    elif camera == 'video':
+        ip_cam = 'video'
+        fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'videos'))
+        filename = fs.save(videoValue.name, videoValue)
+        source = fs.path(filename)
+        print("VIDEO", filename, type(filename))
 
     print('source ===', source)
     context = {'ip_cam': ip_cam, }
@@ -204,7 +218,8 @@ def gen(camera):
 
 def video_feed(request):
     global source
-    return StreamingHttpResponse(gen(VideoCamera(source)), content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(gen(VideoCamera(source)),
+                                 content_type='multipart/x-mixed-replace; boundary=frame')
 
 
 def create_dir(path):
